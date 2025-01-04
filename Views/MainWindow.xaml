@@ -1,0 +1,84 @@
+﻿<Window x:Class="ExamJanvier2024.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:ExamJanvier2024"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800">
+
+    <Window.Resources>
+        <DataTemplate x:Key="listTemplate">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="120"></ColumnDefinition>
+                    <ColumnDefinition Width="100"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <Label Grid.Column="0" Content="{Binding FullName}"/>
+                <Label Grid.Column="1" Content="{Binding SectionName}"/>
+
+            </Grid>
+        </DataTemplate>
+    </Window.Resources>
+
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Liste des étudiants -->
+        <ListBox Grid.Row="0" 
+                 Height="200"
+                 Name="lbxStudents"
+                 ItemsSource="{Binding StudentsList}"
+                 SelectedItem="{Binding SelectedStudent}"
+                 ItemTemplate="{StaticResource listTemplate}"
+                 Margin="0,0,0,10"/>
+
+        <!-- Formulaire d'édition -->
+        <Grid Grid.Row="1" DataContext="{Binding SelectedItem, ElementName=lbxStudents}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <!-- Nom -->
+            <Label Grid.Row="0" Grid.Column="0" Content="Nom :" Margin="0,5"/>
+            <TextBox Grid.Row="0" Grid.Column="1" 
+                     Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}"
+                     Margin="5"/>
+
+            <!-- Prénom -->
+            <Label Grid.Row="1" Grid.Column="0" Content="Prénom :" Margin="0,5"/>
+            <TextBox Grid.Row="1" Grid.Column="1" 
+                     Text="{Binding Firstname, UpdateSourceTrigger=PropertyChanged}"
+                     Margin="5"/>
+
+            <!-- Section -->
+            <Label Grid.Row="2" Grid.Column="0" Content="Section :" Margin="0,5"/>
+
+            <ComboBox Grid.Row="2" Grid.Column="1"
+                      ItemsSource="{Binding DataContext.SectionsList, RelativeSource={RelativeSource AncestorType=Window}}"
+                      DisplayMemberPath="Name"
+                      SelectedValuePath="MonSection"
+                      SelectedValue="{Binding Section}"
+                         Margin="5"/>
+        </Grid>
+
+        <!-- Bouton de mise à jour -->
+        <Button Grid.Row="2" 
+                Content="Mise à jour"
+                Command="{Binding UpdateCommand}"
+                Width="100" 
+                HorizontalAlignment="Right"
+                Margin="0,10,0,0"/>
+    </Grid>
+</Window>
